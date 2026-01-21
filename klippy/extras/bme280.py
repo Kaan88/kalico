@@ -4,8 +4,8 @@
 #
 # This file may be distributed under the terms of the GNU GPLv3 license.
 import logging
-from . import bus
 
+from . import bus
 from .danger_options import get_danger_options
 
 REPORT_TIME = 0.8
@@ -197,6 +197,10 @@ class BME280:
             return
         self.printer.register_event_handler(
             "klippy:connect", self.handle_connect
+        )
+        self.printer.register_event_handler(
+            self.mcu.get_non_critical_reconnect_event_name(),
+            self.handle_connect,
         )
         self.last_gas_time = 0
 
