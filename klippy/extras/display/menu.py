@@ -781,6 +781,15 @@ class MenuVSDList(MenuList):
 
         if sdcard is not None:
             files = sdcard.get_file_list(sdcard.with_subdirs)
+            try:
+                def get_mtime(f):
+                    try:
+                        return os.path.getmtime(os.path.join(sdcard.sdcard_dirname, f[0]))
+                    except OSError:
+                        return 0.0
+                files = sorted(files, key=get_mtime, reverse=True)
+            except Exception:
+                pass
             for fname, fsize in files:
                 self.insert_item(
                     self.manager.menuitem_from(
